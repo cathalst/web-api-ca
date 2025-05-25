@@ -1,114 +1,44 @@
-import React, { useState } from "react";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import Button from "@mui/material/Button";
-import MenuIcon from "@mui/icons-material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
-import { useNavigate } from "react-router";
-import { styled } from '@mui/material/styles';
-import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import { useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { AuthContext } from "../../contexts/authContext";
 
 
-
-const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
-
-const SiteHeader = ({ history }) => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  
+const SiteHeader = () => {
+  const context = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const menuOptions = [
-    { label: "Home", path: "/" },
-    { label: "Favorites", path: "/movies/favorites" },
-    { label: "Upcoming", path: "/movies/upcoming" },
-    // { label: "Option 4", path: "/" },
-    { label: "Popular", path: "/movies/popular" }, 
-    { label: "Top Rated", path: "/movies/toprated" }, 
-    { label: "Now Playing", path: "/movies/now_playing" }, 
-  ];
-
-  const handleMenuSelect = (pageURL) => {
-    navigate(pageURL, { replace: true });
-  };
-
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
   return (
-    <>
-      <AppBar position="fixed" color="primary" >
-        <Toolbar>
-        <Typography variant="h4" sx={{ flexGrow: 1, fontWeight: "bold" }}>
-          The Movie DB 
-         </Typography>
-
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Find your favourite Movies!
-          </Typography>
-            {isMobile ? (
-              <>
-                <IconButton
-                  aria-label="menu"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleMenu}
-                  color="inherit"
-                >
-                  <MenuIcon />
-                </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={open}
-                  onClose={() => setAnchorEl(null)}
-                >
-                  {menuOptions.map((opt) => (
-                    <MenuItem
-                      key={opt.label}
-                      onClick={() => handleMenuSelect(opt.path)}
-                    >
-                      {opt.label}
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </>
-            ) : (
-              <>
-                {menuOptions.map((opt) => (
-                       <Button
-                   key={opt.label}
-                   color="inherit"
-                    sx={{ mx: 1 }}
-                    onClick={() => handleMenuSelect(opt.path)}
- >
-                    {opt.label}
-                     </Button>
- 
-                ))}
-              </>
-            )}
-        </Toolbar>
-      </AppBar>
-      <Offset />
-    </>
+    <header className="site-header">
+      <div className="left-section">
+        <Link to="/" className="home-link">MyMovies</Link>
+        <nav className="nav-links">
+          {context && context.user ? (
+            <>
+              <Link to="/favorites">Favorites</Link>
+              <Link to="/my-reviews">My Reviews</Link>
+            </>
+          ) : (
+            <>
+              <Link to="/login">Login</Link>
+              <Link to="/signup">Signup</Link>
+            </>
+          )}
+        </nav>
+      </div>
+      <div>
+        {context.user ? (
+          <>
+            <span>Welcome, {context.user.username}!</span>{" "}
+            <button onClick={context.logout}>Sign out</button>
+          </>
+        ) : (
+          <>
+            <span>You are not logged in</span>{" "}
+            <button onClick={() => navigate("/login")}>Login</button>
+          </>
+        )}
+      </div>
+    </header>
   );
 };
 
