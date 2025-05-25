@@ -22,22 +22,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const signup = async (username, password) => {
-    const response = await fetch("http://localhost:8080/api/users", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
+const signup = async (username, password) => {
+  console.log("SIGNUP: sending request", { username, password }); // 👈 Add this
 
-    if (response.ok) {
-      const data = await response.json();
-      setUser(data.user);
-      localStorage.setItem("token", data.token);
-      return true;
-    } else {
-      return false;
-    }
-  };
+  const response = await fetch("http://localhost:8080/api/users", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password }),
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    setUser(data.user);
+    localStorage.setItem("token", data.token);
+    return true;
+  } else {
+    return false;
+  }
+};
+
 
   const logout = () => {
     setUser(null);
