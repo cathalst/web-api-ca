@@ -1,43 +1,39 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/authContext";
-import "../styles/auth.css";
+import "../styles/auth.css"; 
 
 const SignupPage = () => {
+  const { register, handleSubmit } = useForm();
   const context = useContext(AuthContext);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Submit clicked");
-
+  const onSubmit = async (data) => {
     try {
-      await context.signup(username, password);
+      await context.signup(data);
+      navigate("/movies"); 
     } catch (err) {
       console.error("Signup failed", err);
+      alert("Signup failed");
     }
   };
 
   return (
     <div className="auth-container">
       <h2>Sign Up</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <input
-          type="text"
+          {...register("username")}
           placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
           required
         />
-
         <input
+          {...register("password")}
           type="password"
           placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
           required
         />
-
         <button type="submit">Create Account</button>
       </form>
     </div>

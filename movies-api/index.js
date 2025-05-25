@@ -4,21 +4,12 @@ import cors from 'cors';
 
 //import tasksRouter from "./api/tasks/index.js";
 import moviesRouter from "./api/movies/index.js";
-import usersRouter from "./api/users/index.js";
+//import usersRouter from "./api/users/index.js";
 import reviewsRouter from "./api/reviews/index.js";
 import authenticate from "./authenticate/index.js";
 
 // Load .env variables
 dotenv.config();
-
-import mongoose from 'mongoose';
-
-mongoose.connect(process.env.MONGO_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log("MongoDB connected successfully"))
-.catch(err => console.error("MongoDB connection error:", err));
 
 // Init Express
 const app = express();
@@ -29,7 +20,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-//app.use('/api/tasks', authenticate, tasksRouter);
+app.use('/api/tasks', authenticate, tasksRouter);
 app.use('/api/movies', moviesRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/reviews', reviewsRouter);
