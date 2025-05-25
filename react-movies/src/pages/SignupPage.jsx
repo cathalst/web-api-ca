@@ -1,54 +1,44 @@
-import React, { useState } from "react";
-import { useAuth } from "../contexts/authContext";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../contexts/authContext";
+import "../styles/auth.css";
 
 const SignupPage = () => {
-  const { signup } = useAuth();
-  const navigate = useNavigate();
-
+  const context = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  console.log("Submit clicked");
+    e.preventDefault();
+    console.log("Submit clicked");
 
-  const success = await signup(username, password);
-  if (success) {
-    navigate("/");
-  } else {
-    setError("Signup failed.");
-  }
-};
-
+    try {
+      await context.signup(username, password);
+    } catch (err) {
+      console.error("Signup failed", err);
+    }
+  };
 
   return (
-    <div>
-      <h1>Sign Up</h1>
+    <div className="auth-container">
+      <h2>Sign Up</h2>
       <form onSubmit={handleSubmit}>
-        <label>
-          Username:
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </label>
-        <br />
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        <br />
-        <button type="submit">Sign Up</button>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <button type="submit">Create Account</button>
       </form>
     </div>
   );

@@ -1,51 +1,44 @@
-import React, { useState } from "react";
-import { useAuth } from "../contexts/authContext";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../contexts/authContext";
+import "../styles/auth.css";
 
 const LoginPage = () => {
-  const { login } = useAuth();
-  const navigate = useNavigate();
-
+  const context = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const success = await login(username, password);
-    if (success) {
-      navigate("/");
-    } else {
-      setError("Login failed. Please try again.");
+    console.log("Login clicked");
+
+    try {
+      await context.authenticate(username, password);
+    } catch (err) {
+      console.error("Login failed", err);
     }
   };
 
   return (
-    <div>
-      <h1>Log In</h1>
+    <div className="auth-container">
+      <h2>Login</h2>
       <form onSubmit={handleSubmit}>
-        <label>
-          Username:
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </label>
-        <br />
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        <br />
-        <button type="submit">Log In</button>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <button type="submit">Login</button>
       </form>
     </div>
   );

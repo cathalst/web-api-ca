@@ -11,6 +11,15 @@ import authenticate from "./authenticate/index.js";
 // Load .env variables
 dotenv.config();
 
+import mongoose from 'mongoose';
+
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log("MongoDB connected successfully"))
+.catch(err => console.error("MongoDB connection error:", err));
+
 // Init Express
 const app = express();
 const port = process.env.PORT || 8080;
