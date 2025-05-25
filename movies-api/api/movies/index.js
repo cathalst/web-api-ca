@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler';
-import { getMovies } from '../tmdb-api'; 
+import { getMovies } from '../tmdb-api.js'; 
 
 
 import express from 'express';

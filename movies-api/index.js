@@ -1,47 +1,40 @@
 import dotenv from 'dotenv';
 import express from 'express';
-import tasksRouter from "./api/tasks/index.js";
 import cors from 'cors';
+
+//import tasksRouter from "./api/tasks/index.js";
 import moviesRouter from "./api/movies/index.js";
 import usersRouter from "./api/users/index.js";
 import reviewsRouter from "./api/reviews/index.js";
 import authenticate from "./authenticate/index.js";
 
-app.use("/api/reviews", reviewsRouter);
-
-app.use('/api/movies', moviesRouter); 
-
-
-
+// Load .env variables
 dotenv.config();
 
-const errHandler = (err, req, res, next) => {
-
-  if(process.env.NODE_ENV === 'production') {
-    return res.status(500).send(`Something went wrong!`);
-  }
-  res.status(500).send(`Hey!! You caught the error 👍👍. Here's the details: ${err.stack} `);
-};
-
+// Init Express
 const app = express();
-// Enable CORS for all requests
+const port = process.env.PORT || 8080;
+
+// Middleware
 app.use(cors());
-
-const port = process.env.PORT;
-
-
 app.use(express.json());
 
-app.use('/api/tasks', authenticate, tasksRouter);
-
-//Users router
+// Routes
+//app.use('/api/tasks', authenticate, tasksRouter);
+app.use('/api/movies', moviesRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/reviews', reviewsRouter);
 
-
-
+// Error handler
+const errHandler = (err, req, res, next) => {
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(500).send('Something went wrong!');
+  }
+  res.status(500).send(`You caught the error: ${err.stack}`);
+};
 app.use(errHandler);
 
-
+// Start server
 app.listen(port, () => {
-  console.info(`Server running at ${port}`);
+  console.info(`Server running at http://localhost:${port}`);
 });

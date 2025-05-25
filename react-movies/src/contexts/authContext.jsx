@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
   };
 
 const signup = async (username, password) => {
-  console.log("SIGNUP: sending request", { username, password }); // 👈 Add this
+  console.log("SIGNUP: sending request", { username, password }); 
 
   const response = await fetch("http://localhost:8080/api/users", {
     method: "POST",
