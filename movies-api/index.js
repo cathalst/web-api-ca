@@ -1,13 +1,13 @@
 import dotenv from 'dotenv';
 import express from 'express';
-import tasksRouter from './api/tasks';
-// other imports
+import tasksRouter from "./api/tasks/index.js";
 import cors from 'cors';
-//... other imports
-import usersRouter from './api/users';
-import authenticate from './authenticate';
+import moviesRouter from "./api/movies/index.js";
+import usersRouter from "./api/users/index.js";
+import reviewsRouter from "./api/reviews/index.js";
+import authenticate from "./authenticate/index.js";
 
-import moviesRouter from './api/movies';   
+app.use("/api/reviews", reviewsRouter);
 
 app.use('/api/movies', moviesRouter); 
 
@@ -16,8 +16,7 @@ app.use('/api/movies', moviesRouter);
 dotenv.config();
 
 const errHandler = (err, req, res, next) => {
-  /* if the error in development then send stack trace to display whole error,
-  if it's in production then just send error message  */
+
   if(process.env.NODE_ENV === 'production') {
     return res.status(500).send(`Something went wrong!`);
   }

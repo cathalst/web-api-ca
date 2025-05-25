@@ -11,14 +11,17 @@ const SignupPage = () => {
   const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const success = await signup(username, password);
-    if (success) {
-      navigate("/");
-    } else {
-      setError("Signup failed. Username may already exist.");
-    }
-  };
+  e.preventDefault();
+  console.log("Submit clicked");
+
+  const success = await signup(username, password);
+  if (success) {
+    navigate("/");
+  } else {
+    setError("Signup failed.");
+  }
+};
+
 
   return (
     <div>
