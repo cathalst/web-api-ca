@@ -1,20 +1,18 @@
-export const getMovies = (page = 1) => {
+export const getMovies = () => {
   return fetch(
-    `https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&page=${page}`
-  )
-    .then((response) => {
-      if (!response.ok) {
-        return response.json().then((error) => {
-          throw new Error(error.status_message || "Something went wrong");
-        });
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      throw error;
-    });
+    `http://localhost:8080/api/movies/discover`
+  ).then((response) => {
+    if (!response.ok) {
+      return response.json().then((error) => {
+        throw new Error(error.status_message || "Something went wrong");
+      });
+    }
+    return response.json();
+  })
+  .catch((error) => {
+      throw error
+  });
 };
-
 
   
 export const getMovie = (args) => {
